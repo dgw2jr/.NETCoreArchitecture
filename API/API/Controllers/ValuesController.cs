@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,11 +11,22 @@ namespace API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IEmployeeContext _employeeContext;
+
+        public ValuesController(IEmployeeContext employeeContext)
+        {
+            _employeeContext = employeeContext;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Employee>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var employee = new Employee {Name = "Don"};
+            _employeeContext.Add(employee);
+            _employeeContext.Save();
+
+            return _employeeContext.Employees.ToList();
         }
 
         // GET api/values/5
