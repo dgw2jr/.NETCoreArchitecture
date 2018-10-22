@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Domain
+namespace Infrastructure
 {
     public class EmployeeContext : DbContext, IEmployeeContext
     {
