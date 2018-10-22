@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Domain;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using NHibernate;
 
 namespace Infrastructure
 {
@@ -16,6 +18,11 @@ namespace Infrastructure
             Set<T>().Add(entity);
         }
 
+        public void Update<T>(T entity) where T : class
+        {
+            throw new System.NotImplementedException();
+        }
+
         public new void Remove<T>(T entity) where T : class
         {
             Set<T>().Remove(entity);
@@ -27,10 +34,42 @@ namespace Infrastructure
         }
 
         public IQueryable<Employee> Employees => EmployeeSet.AsQueryable();
-        public IQueryable<EmployeeRole> EmployeeRoles => EmployeeRoleSet.AsQueryable();
 
         protected DbSet<Employee> EmployeeSet { get; set; }
-        protected DbSet<EmployeeRole> EmployeeRoleSet { get; set; }
+
+    }
+
+    public class NHibernateEmployeeContext : IEmployeeContext
+    {
+        private readonly ISession _session;
+
+        public NHibernateEmployeeContext(ISession session)
+        {
+            _session = session;
+            _session.Transaction.Begin();
+        }
+
+        public void Add<T>(T entity) where T : class
+        {
+            _session.SaveOrUpdate(entity);
+        }
+
+        public void Update<T>(T entity) where T : class
+        {
+            _session.SaveOrUpdate(entity);
+        }
+
+        public void Remove<T>(T entity) where T : class
+        {
+            _session.Delete(entity);
+        }
+
+        public void Save()
+        {
+            _session.Transaction.Commit();
+        }
+
+        public IQueryable<Employee> Employees => _session.Query<Employee>();
 
     }
 }

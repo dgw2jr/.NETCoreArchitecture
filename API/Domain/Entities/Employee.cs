@@ -1,7 +1,6 @@
-﻿using System;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 
-namespace Domain
+namespace Domain.Entities
 {
     public class Employee : Entity
     {
@@ -16,7 +15,7 @@ namespace Domain
             EmployeeRole = role;
         }
 
-        public string Name { get; private set; }
+        public virtual string Name { get; protected set; }
 
         public static Result<Employee> Create(string name, EmployeeRole role)
         {
@@ -27,6 +26,6 @@ namespace Domain
             return Result.Ok(new Employee(name, role));
         }
 
-        public EmployeeRole EmployeeRole { get; private set; }
+        public virtual EmployeeRole EmployeeRole { get; protected set; }
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Domain
+namespace Domain.Entities
 {
     public class EmployeeRole : Entity
     {
@@ -10,13 +9,11 @@ namespace Domain
 
     public class CEOEmployeeRole : EmployeeRole
     {
-        public override Guid ID => Guid.Parse("{758C756A-27CF-43F4-A9EC-C5CB1E72E11E}");
         public override decimal Bonus => 100000m;
     }
 
     public class CIOEmployeeRole : EmployeeRole
     {
-        public override Guid ID => Guid.Parse("{301DA9EE-14C2-4256-9835-5BD5DF431BAC}");
         public override decimal Bonus => 10000m;
     }
 

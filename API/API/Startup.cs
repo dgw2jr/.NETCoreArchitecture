@@ -20,7 +20,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDataServices();
+            services.AddDataServices(Configuration.GetConnectionString("EmployeesContext"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
