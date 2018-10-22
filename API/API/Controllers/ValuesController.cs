@@ -22,8 +22,13 @@ namespace API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Employee>> Get()
         {
-            var employee = new Employee {Name = "Don"};
-            _employeeContext.Add(employee);
+            var employee = Employee.Create("Don", EmployeeRoles.CEO);
+            if(employee.IsFailure)
+            {
+                return BadRequest(employee.Error);
+            }
+
+            _employeeContext.Add(employee.Value);
             _employeeContext.Save();
 
             return _employeeContext.Employees.ToList();

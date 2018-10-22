@@ -9,6 +9,6 @@ namespace Domain
             ID = Guid.NewGuid();    
         }
 
-        public Guid ID { get; set; }
+        public virtual Guid ID { get; set; }
     }
 }
