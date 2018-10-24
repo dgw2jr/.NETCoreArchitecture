@@ -35,8 +35,8 @@ namespace Domain.ValueObjects
 
         public static Dictionary<string, EmployeeRole> RolesDictionary => new Dictionary<string, EmployeeRole>
         {
-            { "CEO", CEO },
-            { "CIO", CIO }
+            { CEO.Name, CEO },
+            { CIO.Name, CIO }
         };
     }
 }
