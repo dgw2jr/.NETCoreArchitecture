@@ -1,10 +1,5 @@
-﻿using System;
-using System.Configuration;
-using System.Linq;
-using Domain;
-using Domain.Entities;
-using Domain.ValueObjects;
-using FluentNHibernate.Automapping;
+﻿using Domain;
+using Domain.Entities.Mappings;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using Microsoft.Extensions.DependencyInjection;
