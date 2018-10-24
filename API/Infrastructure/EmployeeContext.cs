@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data;
+using System.Linq;
 using Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -39,20 +41,21 @@ namespace Infrastructure
 
     }
 
-    public class NHibernateEmployeeContext : IEmployeeContext
+    public class NHibernateEmployeeContext : IEmployeeContext, IDisposable
     {
         private readonly ISession _session;
         private readonly ITransaction _transaction;
+        private bool _isAlive = true;
 
-        public NHibernateEmployeeContext(ISession session)
+        public NHibernateEmployeeContext(ISessionFactory sessionFactory)
         {
-            _session = session;
-            _transaction = _session.BeginTransaction();
+            _session = sessionFactory.OpenSession();
+            _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
         }
 
         public void Add<T>(T entity) where T : class
         {
-            _session.SaveOrUpdate(entity);
+            _session.Save(entity);
         }
 
         public void Update<T>(T entity) where T : class
@@ -67,10 +70,26 @@ namespace Infrastructure
 
         public void Save()
         {
-            _transaction.Commit();
+            if (!_isAlive)
+                return;
+
+            try
+            {
+                _transaction.Commit();
+            }
+            finally
+            {
+                _isAlive = false;
+                _transaction.Dispose();
+            }
         }
 
         public IQueryable<Employee> Employees => _session.Query<Employee>();
 
+        public void Dispose()
+        {
+            _session?.Dispose();
+            _transaction?.Dispose();
+        }
     }
 }

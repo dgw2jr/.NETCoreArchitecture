@@ -5,7 +5,7 @@ namespace Domain.ValueObjects
 {
     public class EmployeeRole : ValueObject
     {
-        public virtual decimal Bonus { get; }
+        public virtual decimal Bonus { get; set; }
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Bonus;

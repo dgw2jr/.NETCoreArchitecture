@@ -14,11 +14,11 @@ namespace API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly ISession _session;
+        private readonly IEmployeeContext _employeeContext;
 
-        public ValuesController(ISession session)
+        public ValuesController(IEmployeeContext employeeContext)
         {
-            _session = session;
+            _employeeContext = employeeContext;
         }
 
         // GET api/values
@@ -31,14 +31,10 @@ namespace API.Controllers
                 return BadRequest(employee.Error);
             }
 
-            using (var tx = _session.BeginTransaction())
-            {
-                _session.Save(employee.Value);
+            _employeeContext.Add(employee.Value);
+            _employeeContext.Save();
 
-                tx.Commit();
-            }
-
-            return _session.Query<Employee>().ToList();
+            return _employeeContext.Employees.ToList();
         }
 
         // GET api/values/5
