@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTOs;
 using Domain;
 using Domain.Entities;
 using Domain.ValueObjects;
@@ -25,15 +26,6 @@ namespace API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Employee>> Get()
         {
-            var employee = Employee.Create("Don", EmployeeRoles.CEO);
-            if(employee.IsFailure)
-            {
-                return BadRequest(employee.Error);
-            }
-
-            _employeeContext.Add(employee.Value);
-            _employeeContext.Save();
-
             return _employeeContext.Employees.ToList();
         }
 
@@ -46,8 +38,18 @@ namespace API.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult Post([FromBody] CreateCustomerDto value)
         {
+            var employee = Employee.Create(value.Name, EmployeeRoles.RolesDictionary[value.Role]);
+            if (employee.IsFailure)
+            {
+                return BadRequest(employee.Error);
+            }
+
+            _employeeContext.Add(employee.Value);
+            _employeeContext.Save();
+
+            return Ok();
         }
 
         // PUT api/values/5

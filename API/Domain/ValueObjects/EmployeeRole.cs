@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CSharpFunctionalExtensions;
 
 namespace Domain.ValueObjects
@@ -26,10 +27,12 @@ namespace Domain.ValueObjects
     {
         public static CEOEmployeeRole CEO => new CEOEmployeeRole();
         public static CIOEmployeeRole CIO => new CIOEmployeeRole();
-        public static List<EmployeeRole> Roles => new List<EmployeeRole>
+        public static List<EmployeeRole> Roles => RolesDictionary.Select(d => d.Value).ToList();
+
+        public static Dictionary<string, EmployeeRole> RolesDictionary => new Dictionary<string, EmployeeRole>
         {
-            CEO,
-            CIO
+            { "CEO", CEO },
+            { "CIO", CIO }
         };
     }
 }

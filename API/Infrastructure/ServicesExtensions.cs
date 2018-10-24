@@ -12,8 +12,6 @@ namespace Infrastructure
     {
         public static void AddDataServices(this IServiceCollection services, string connectionString)
         {
-            //services.AddDbContext<EmployeeContext>(builder => builder.UseInMemoryDatabase("test"));
-            //services.AddScoped<IEmployeeContext>(provider => provider.GetService<EmployeeContext>());
             var configuration = Fluently.Configure().BuildConfiguration();
             var factory = Fluently.Configure(configuration)
                 .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
