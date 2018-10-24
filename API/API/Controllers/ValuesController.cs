@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : BaseController
     {
         private readonly IEmployeeContext _employeeContext;
 
@@ -24,9 +24,9 @@ namespace API.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<Envelope<List<Employee>>> Get()
+        public IActionResult Get()
         {
-            return Envelope.Ok(_employeeContext.Employees.ToList());
+            return Ok(_employeeContext.Employees.ToList());
         }
 
         // GET api/values/5
@@ -38,18 +38,18 @@ namespace API.Controllers
 
         // POST api/values
         [HttpPost]
-        public ActionResult<Envelope> Post([FromBody] CreateCustomerDto value)
+        public IActionResult Post([FromBody] CreateCustomerDto value)
         {
             var employee = Employee.Create(value.Name, EmployeeRoles.RolesDictionary.TryGetValue(value.Role, out var role) ? role : null);
             if (employee.IsFailure)
             {
-                return BadRequest(employee.Error);
+                return BadRequest(Envelope.Error(employee.Error));
             }
 
             _employeeContext.Add(employee.Value);
             _employeeContext.Save();
 
-            return Ok(Envelope.Ok());
+            return Ok("Success");
         }
 
         // PUT api/values/5
