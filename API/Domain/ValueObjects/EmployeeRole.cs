@@ -32,28 +32,4 @@ namespace Domain.ValueObjects
             CIO
         };
     }
-
-    //public class EmployeeRoleMapping : ClassMap<EmployeeRole>
-    //{
-    //    public EmployeeRoleMapping()
-    //    {
-    //        Id(e => e.ID);
-    //        DiscriminateSubClassesOnColumn("Discriminator").Unique();
-    //    }
-    //}
-
-    //public class CEOMapping : SubclassMap<CEOEmployeeRole>
-    //{
-    //    public CEOMapping()
-    //    {
-    //        DiscriminatorValue("CEO");
-    //    }
-    //}
-    //public class CIOMapping : SubclassMap<CIOEmployeeRole>
-    //{
-    //    public CIOMapping()
-    //    {
-    //        DiscriminatorValue("CIO");
-    //    }
-    //}
 }
