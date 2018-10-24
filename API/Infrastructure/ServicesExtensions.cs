@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Linq;
 using Domain;
 using Domain.Entities;
+using Domain.ValueObjects;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
@@ -21,25 +22,30 @@ namespace Infrastructure
             var configuration = Fluently.Configure().BuildConfiguration();
             var factory = Fluently.Configure(configuration)
                 .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
-                .Mappings(m => m.AutoMappings.Add(AutoMap.AssemblyOf<Employee>(new StoreConfiguration())))
+                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<EmployeeMap>())
                 .BuildSessionFactory();
 
-            //new SchemaExport(configuration).Create(false, true);
+            new SchemaExport(configuration).Create(false, true);
 
             services.AddSingleton(factory);
             services.AddScoped(provider => provider.GetService<ISessionFactory>().OpenSession());
             services.AddScoped<IEmployeeContext>(provider => new NHibernateEmployeeContext(provider.GetService<ISession>()));
 
-            using (var session = factory.OpenSession())
-            {
-                if (!session.Query<EmployeeRole>().Any())
-                {
-                    foreach (var employeeRole in EmployeeRoles.Roles)
-                    {
-                        session.SaveOrUpdate(employeeRole);
-                    }
-                }
-            }
+            //using (var session = factory.OpenSession())
+            //{
+            //    using (var tx = session.BeginTransaction())
+            //    {
+            //        if (!session.Query<EmployeeRole>().Any())
+            //        {
+            //            foreach (var employeeRole in EmployeeRoles.Roles)
+            //            {
+            //                session.SaveOrUpdate(employeeRole);
+            //            }
+            //        }
+
+            //        tx.Commit();
+            //    }
+            //}
         }
     }
 

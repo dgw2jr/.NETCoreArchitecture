@@ -9,7 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ValueObjects\" />
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\..\..\Users\dowoodf\.nuget\packages\fluentnhibernate\2.1.2\lib\netstandard2.0\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\Users\dowoodf\.nuget\packages\nhibernate\5.1.3\lib\netstandard2.0\NHibernate.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -42,11 +42,12 @@ namespace Infrastructure
     public class NHibernateEmployeeContext : IEmployeeContext
     {
         private readonly ISession _session;
+        private readonly ITransaction _transaction;
 
         public NHibernateEmployeeContext(ISession session)
         {
             _session = session;
-            _session.Transaction.Begin();
+            _transaction = _session.BeginTransaction();
         }
 
         public void Add<T>(T entity) where T : class
@@ -66,7 +67,7 @@ namespace Infrastructure
 
         public void Save()
         {
-            _session.Transaction.Commit();
+            _transaction.Commit();
         }
 
         public IQueryable<Employee> Employees => _session.Query<Employee>();

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
+using NHibernate;
 
 namespace API.Controllers
 {
@@ -12,11 +14,11 @@ namespace API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IEmployeeContext _employeeContext;
+        private readonly ISession _session;
 
-        public ValuesController(IEmployeeContext employeeContext)
+        public ValuesController(ISession session)
         {
-            _employeeContext = employeeContext;
+            _session = session;
         }
 
         // GET api/values
@@ -29,10 +31,14 @@ namespace API.Controllers
                 return BadRequest(employee.Error);
             }
 
-            _employeeContext.Add(employee.Value);
-            _employeeContext.Save();
+            using (var tx = _session.BeginTransaction())
+            {
+                _session.Save(employee.Value);
 
-            return _employeeContext.Employees.ToList();
+                tx.Commit();
+            }
+
+            return _session.Query<Employee>().ToList();
         }
 
         // GET api/values/5
