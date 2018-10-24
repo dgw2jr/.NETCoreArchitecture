@@ -8,7 +8,12 @@ namespace Domain.Entities.Mappings
         {
             Id(e => e.ID);
             Map(m => m.Name);
-            Component(c => c.EmployeeRole, part => part.Map(role => role.Bonus));
+            Component(c => c.EmployeeRole, 
+                part =>
+                {
+                    part.Map(role => role.Bonus);
+                    part.Map(role => role.Name);
+                }).ColumnPrefix("Role");
         }
     }
 }

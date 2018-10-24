@@ -18,7 +18,7 @@ namespace Infrastructure
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<EmployeeMap>())
                 .BuildSessionFactory();
 
-            new SchemaExport(configuration).Create(false, true);
+            //new SchemaExport(configuration).Create(false, true);
 
             services.AddSingleton(factory);
             services.AddScoped<IEmployeeContext>(provider => new NHibernateEmployeeContext(provider.GetService<ISessionFactory>()));

@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using API.DTOs;
 using Domain;
 using Domain.Entities;
 using Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
-using NHibernate;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : BaseController
+    public class EmployeesController : BaseController
     {
         private readonly IEmployeeContext _employeeContext;
 
-        public ValuesController(IEmployeeContext employeeContext)
+        public EmployeesController(IEmployeeContext employeeContext)
         {
             _employeeContext = employeeContext;
         }
@@ -31,14 +28,19 @@ namespace API.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public IActionResult Get(Guid id)
         {
-            return "value";
+            var employee = _employeeContext.Employees.SingleOrDefault(e => e.ID.Equals(id));
+            
+            if(employee == null)
+                return Error("Employee not found.");
+            
+            return Ok(employee);
         }
 
         // POST api/values
         [HttpPost]
-        public IActionResult Post([FromBody] CreateCustomerDto value)
+        public IActionResult Post([FromBody] CreateEmployeeDto value)
         {
             var employee = Employee.Create(value.Name, EmployeeRoles.RolesDictionary.TryGetValue(value.Role, out var role) ? role : null);
             if (employee.IsFailure)

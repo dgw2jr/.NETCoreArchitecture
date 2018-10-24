@@ -6,20 +6,24 @@ namespace Domain.ValueObjects
 {
     public class EmployeeRole : ValueObject
     {
+        public virtual string Name { get; set; }
         public virtual decimal Bonus { get; set; }
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Bonus;
+            yield return Name;
         }
     }
 
     public class CEOEmployeeRole : EmployeeRole
     {
+        public override string Name => "CEO";
         public override decimal Bonus => 100000m;
     }
 
     public class CIOEmployeeRole : EmployeeRole
     {
+        public override string Name => "CIO";
         public override decimal Bonus => 10000m;
     }
 
