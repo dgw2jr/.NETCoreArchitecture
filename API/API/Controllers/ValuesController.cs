@@ -24,9 +24,9 @@ namespace API.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Employee>> Get()
+        public ActionResult<Envelope<List<Employee>>> Get()
         {
-            return _employeeContext.Employees.ToList();
+            return Envelope.Ok(_employeeContext.Employees.ToList());
         }
 
         // GET api/values/5
@@ -38,9 +38,9 @@ namespace API.Controllers
 
         // POST api/values
         [HttpPost]
-        public ActionResult Post([FromBody] CreateCustomerDto value)
+        public ActionResult<Envelope> Post([FromBody] CreateCustomerDto value)
         {
-            var employee = Employee.Create(value.Name, EmployeeRoles.RolesDictionary[value.Role]);
+            var employee = Employee.Create(value.Name, EmployeeRoles.RolesDictionary.TryGetValue(value.Role, out var role) ? role : null);
             if (employee.IsFailure)
             {
                 return BadRequest(employee.Error);
@@ -49,7 +49,7 @@ namespace API.Controllers
             _employeeContext.Add(employee.Value);
             _employeeContext.Save();
 
-            return Ok();
+            return Ok(Envelope.Ok());
         }
 
         // PUT api/values/5
